@@ -1,41 +1,80 @@
-// Protobuf schema for response to Nest Observe API call
+// Nest sensor trait protobuf definitions.
+// Field numbers verified against SDK JS bundle sdk-421f7ba4a82b319d562a.js
+// via deserializeBinaryFromReader switch/case analysis.
 
 syntax = "proto3";
 
-import "google/protobuf/any.proto";
+import "google/protobuf/wrappers.proto";
 
 package nest.trait.sensor;
 
-// Messages
-
-message HumidityTrait {
-  message X1 {
-    Float_Indirect value = 1;
-  }
-  
-  X1 humidity = 1;
-}
-
+// -- TemperatureTrait ----------------------------------------------------------
+// field 1 = TemperatureSample { FloatValue value = 1 }
+// field 2 = TemperatureFaultInformation (not decoded)
 message TemperatureTrait {
-  message X1 {
-    Float_Indirect value = 1;
+  message TemperatureSample {
+    google.protobuf.FloatValue value = 1;
   }
-  
-  X1 temperature = 1;
+  message TemperatureFaultInformation {}
+
+  TemperatureSample   temperature_value = 1;
+  TemperatureFaultInformation temperature_fault = 2;
 }
 
-// Enums
+// -- HumidityTrait -------------------------------------------------------------
+// field 1 = HumiditySample { FloatValue value = 1 }
+// field 2 = HumidityFaultInformation (not decoded)
+message HumidityTrait {
+  message HumiditySample {
+    google.protobuf.FloatValue value = 1;
+  }
+  message HumidityFaultInformation {}
 
-// Indirects
-
-message String_Indirect {
-  string value = 1;
+  HumiditySample      humidity_value = 1;
+  HumidityFaultInformation humidity_fault = 2;
 }
 
-message Float_Indirect {
-  float value = 1;
+// -- CarbonMonoxideTrait -------------------------------------------------------
+// field 1 = CoSample { uint32 value = 1 }   <- raw integer ppm, NOT FloatValue
+// field 2 = CoFaultInformation (not decoded)
+message CarbonMonoxideTrait {
+  message CoSample {
+    uint32 value = 1;  // CO concentration in ppm
+  }
+  message CoFaultInformation {}
+
+  CoSample            co_value = 1;
+  CoFaultInformation  co_fault = 2;
 }
 
-message Int32_Indirect {
-  int32 value = 1;
+// -- SmokeTrait ----------------------------------------------------------------
+// NOTE: legacy field-numbering - data fields start at 3, not 1.
+// field 3 = SmokeSample (infrared_led_value)
+// field 4 = SmokeSample (heat_sensor_value)
+// field 5 = SmokeFaultInformation (not decoded)
+// field 6 = SmokeFaultInformation (not decoded)
+// SmokeSample.value is at field 3 (FloatValue), NOT field 1.
+message SmokeTrait {
+  message SmokeSample {
+    google.protobuf.FloatValue value = 3;  // field 3, not 1
+  }
+  message SmokeFaultInformation {}
+
+  SmokeSample         infrared_led_value   = 3;
+  SmokeSample         heat_sensor_value    = 4;
+  SmokeFaultInformation infrared_led_fault = 5;
+  SmokeFaultInformation heat_sensor_fault  = 6;
+}
+
+// -- BatteryVoltageTrait -------------------------------------------------------
+// field 1 = BatteryVoltageSample { FloatValue value = 1 }
+// field 2 = BatteryVoltageFaultInformation (not decoded)
+message BatteryVoltageTrait {
+  message BatteryVoltageSample {
+    google.protobuf.FloatValue value = 1;
+  }
+  message BatteryVoltageFaultInformation {}
+
+  BatteryVoltageSample        battery_value = 1;
+  BatteryVoltageFaultInformation battery_fault = 2;
 }

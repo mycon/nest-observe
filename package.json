@@ -17,7 +17,7 @@
     "unofficial",
     "google auth"
   ],
-  "homepage": "https://github.com/Humpheh/nest-observe",
+  "homepage": "https://github.com/mycon/nest-observe",
   "author": {
     "name": "Humphrey Shotton",
     "email": "humph@humpheh.com",
@@ -26,7 +26,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Humpheh/nest-observe.git"
+    "url": "https://github.com/mycon/nest-observe.git"
   },
   "dependencies": {
     "google-protobuf": "^3.10.0",

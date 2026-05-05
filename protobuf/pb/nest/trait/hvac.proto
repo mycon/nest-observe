@@ -1,4 +1,5 @@
-// Protobuf schema for response to Nest Observe API call
+// Protobuf schema for Nest HVAC traits.
+// Field numbers verified against SDK sdk-421f7ba4a82b319d562a.js.
 
 syntax = "proto3";
 
@@ -9,34 +10,61 @@ package nest.trait.hvac;
 
 // Messages
 
-message TargetTemperatureSettingsTrait {
-  message TemperatureSetPoint {
-    HeatCoolMode hvac_mode = 1;
-    Float_Indirect target_temperature_heat = 4;
-    Float_Indirect target_temperature_cool = 5;
-    UpdateStamp update_info = 6;
-    UpdateStamp original_update_info = 7;
-  }
-
-  TemperatureSetPoint settings = 1;
-  Int32_Indirect active = 2;
-}
-
+// NOTE: TargetTemperatureSettingsTrait is defined in nest_hvac_extra.proto
+// to avoid circular dependency with SetPointScheduleSettingsTrait.
+// Field numbers verified against SDK sdk-421f7ba4a82b319d562a.js
 message HvacControlTrait {
   message HvacState {
-    int32 is_cooling = 1;
-    int32 is_heating = 4;
+    bool cool_stage1_active           = 1;
+    bool cool_stage2_active           = 2;
+    bool cool_stage3_active           = 3;
+    bool heat_stage1_active           = 4;
+    bool heat_stage2_active           = 5;
+    bool heat_stage3_active           = 6;
+    bool alternate_heat_stage1_active = 7;
+    bool alternate_heat_stage2_active = 8;
+    bool auxiliary_heat_active        = 9;
+    bool emergency_heat_active        = 10;
+    bool humidifier_active            = 11;
+    bool dehumidifier_active          = 12;
+    bool ventilator_active            = 13;
   }
 
-  HvacState settings = 1;
-  int32 is_delayed = 2;
-  Int32_Indirect timestamp = 3;
+  enum HvacStateChangeReason {
+    HVAC_STATE_CHANGE_REASON_UNSPECIFIED      = 0;
+    HVAC_STATE_CHANGE_REASON_UNKNOWN          = 1;
+    HVAC_STATE_CHANGE_REASON_HVAC_WIRE_POWER_LOSS = 2;
+    HVAC_STATE_CHANGE_REASON_SYSTEM_TEST      = 3;
+    HVAC_STATE_CHANGE_REASON_SWITCH_SHUT_OFF  = 4;
+  }
+
+  HvacState              hvac_state                   = 1;
+  bool                   compressor_lockout_enabled    = 2;
+  Int32_Indirect         compressor_lockout_timeout    = 3;  // Timestamp
+  bool                   min_cycle_lockout_enabled     = 4;
+  Int32_Indirect         min_cycle_lockout_timeout     = 5;  // Timestamp
 }
 
+// Field numbers verified against SDK sdk-421f7ba4a82b319d562a.js
 message EcoModeStateTrait {
-  EcoModeState eco_enabled = 1;
-  EcoModeChangeReason ecoModeChangeReason = 2;
-  UpdateStamp update_info = 3;
+  EcoMode             eco_mode               = 1;
+  EcoModeChangeReason eco_mode_change_reason = 2;
+  // field 3 = HvacActorStruct (update_info, not decoded)
+
+  enum EcoMode {
+    ECO_MODE_UNSPECIFIED = 0;
+    ECO_MODE_INACTIVE    = 1;
+    ECO_MODE_MANUAL_ECO  = 2;
+    ECO_MODE_AUTO_ECO    = 3;
+  }
+}
+
+// Field numbers verified against SDK sdk-421f7ba4a82b319d562a.js
+// field 1 = Temperature (eco heat setpoint)  { float value = 1 }
+// field 2 = Temperature (eco cool setpoint)  { float value = 1 }
+message EcoModeTrait {
+  Float_Indirect eco_heat_setpoint = 1;
+  Float_Indirect eco_cool_setpoint = 2;
 }
 
 message EcoModeSettingsTrait {
@@ -83,18 +111,50 @@ message FanControlSettingsTrait {
     }
 }
 
+// Field numbers verified against SDK sdk-421f7ba4a82b319d562a.js
 message FanControlTrait {
-    FanSpeedSetting currentSpeed = 1;
-    bool userRequestedFanRunning = 2;
+  FanSpeedSetting  current_speed             = 1;
+  bool             user_requested_fan_running = 2;
+  VentilationState ventilation_state         = 3;
+  VentilationAlert ventilation_alert         = 4;
+  FanSpeedState    fan_speed_state           = 5;
 
-    enum FanSpeedSetting {
-        FAN_SPEED_SETTING_UNSPECIFIED = 0;
-        FAN_SPEED_SETTING_STAGE1 = 1;
-        FAN_SPEED_SETTING_STAGE2 = 2;
-        FAN_SPEED_SETTING_STAGE3 = 3;
-        FAN_SPEED_SETTING_OFF = 4;
-        FAN_SPEED_SETTING_AUTO = 5;
-    }
+  enum FanSpeedSetting {
+    FAN_SPEED_SETTING_UNSPECIFIED = 0;
+    FAN_SPEED_SETTING_STAGE1      = 1;
+    FAN_SPEED_SETTING_STAGE2      = 2;
+    FAN_SPEED_SETTING_STAGE3      = 3;
+    FAN_SPEED_SETTING_OFF         = 4;
+    FAN_SPEED_SETTING_AUTO        = 5;
+  }
+
+  enum FanSpeedState {
+    FAN_SPEED_STATE_UNSPECIFIED            = 0;
+    FAN_SPEED_STATE_OFF                    = 1;
+    FAN_SPEED_STATE_TIMER                  = 2;
+    FAN_SPEED_STATE_SCHEDULE               = 3;
+    FAN_SPEED_STATE_EQUIPMENT_ACTIVATION   = 4;
+    FAN_SPEED_STATE_VENTILATION_ACTIVATION = 5;
+    FAN_SPEED_STATE_SYSTEM_TEST            = 6;
+  }
+
+  enum VentilationState {
+    VENTILATION_STATE_UNSPECIFIED        = 0;
+    VENTILATION_STATE_OFF                = 1;
+    VENTILATION_STATE_TIMER              = 2;
+    VENTILATION_STATE_SCHEDULE           = 3;
+    VENTILATION_STATE_INDOOR_AIR_QUALITY = 4;
+    VENTILATION_STATE_HEATING            = 5;
+    VENTILATION_STATE_COOLING            = 6;
+    VENTILATION_STATE_SYSTEM_TEST        = 7;
+  }
+
+  enum VentilationAlert {
+    VENTILATION_ALERT_UNSPECIFIED         = 0;
+    VENTILATION_ALERT_OK                  = 1;
+    VENTILATION_ALERT_OUTDOOR_AIR_QUALITY = 2;
+    VENTILATION_ALERT_INDOOR_AIR_QUALITY  = 3;
+  }
 }
 
 message BackplateInfoTrait {
