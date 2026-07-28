@@ -10,7 +10,7 @@ package nest.trait.hvac;
 
 // Messages
 
-// NOTE: TargetTemperatureSettingsTrait is defined in nest_hvac_extra.proto
+// NOTE: TargetTemperatureSettingsTrait is defined in hvac_extra.proto
 // to avoid circular dependency with SetPointScheduleSettingsTrait.
 // Field numbers verified against SDK sdk-421f7ba4a82b319d562a.js
 message HvacControlTrait {
