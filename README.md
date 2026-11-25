@@ -1,12 +1,12 @@
 # nest-observe
 
-> Unofficial protobuf definitions and API schemas for Google Nest (`home.nest.com` Observe gRPC-Web) and Google Home Foyer (`home.google.com`, `google.internal.home.foyer.v1`)
+> Unofficial protobuf definitions and API schemas for Google Nest ([home.nest.com](https://home.nest.com) Observe gRPC-Web) and Google Home Foyer ([home.google.com](https://home.google.com), `google.internal.home.foyer.v1`)
 
 > **Used by [`nestgraph2`](https://github.com/mycon/nestgraph2)**: This fork is maintained as the protobuf schema submodule for **[mycon/nestgraph2](https://github.com/mycon/nestgraph2)**, a Python collector that logs Nest thermostat staging, humidifier, fan, and remote sensor telemetry to InfluxDB v2 with Grafana dashboards.
 
 ## Fork Additions (Google Home Foyer v1 & Extended Nest Traits)
 
-Ahead of Google's retirement of `home.nest.com` and the classic Nest app, this fork adds compiled-ready proto3 schemas for the **Google Home Foyer v1 API** (`google.internal.home.foyer.v1`, used by `home.google.com` and the Google Home Android app) alongside extended Nest Observe traits:
+Ahead of Google's retirement of [home.nest.com](https://home.nest.com) and the classic Nest app, this fork adds compiled-ready proto3 schemas for the **Google Home Foyer v1 API** (`google.internal.home.foyer.v1`, used by https://home.google.com and the Google Home Android app) alongside extended Nest Observe traits:
 
 - **`protobuf/pb/foyer/`** — Google Home Foyer v1 schemas (extracted from Google Home Android APK Protobuf-Lite descriptors and verified against live `googlehomefoyer-pa.clients6.google.com` responses):
   - `common.proto` — `DeviceId`, `AgentDeviceId`, `LocalDeviceId`, `Temperature`, `Humidity`, `TemperatureRange`, `FanControlSettings`, `TraitParameter`, `TraitState`
