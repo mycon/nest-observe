@@ -1,6 +1,27 @@
 # nest-observe
 
-> Unofficial API for observing Google Nest devices which works with Google authentication
+> Unofficial protobuf definitions and API schemas for Google Nest (`home.nest.com` Observe gRPC-Web) and Google Home Foyer (`home.google.com`, `google.internal.home.foyer.v1`)
+
+> **Used by [`nestgraph2`](https://github.com/mycon/nestgraph2)**: This fork is maintained as the protobuf schema submodule for **[mycon/nestgraph2](https://github.com/mycon/nestgraph2)**, a Python collector that logs Nest thermostat staging, humidifier, fan, and remote sensor telemetry to InfluxDB v2 with Grafana dashboards.
+
+## Fork Additions (Google Home Foyer v1 & Extended Nest Traits)
+
+Ahead of Google's retirement of `home.nest.com` and the classic Nest app, this fork adds compiled-ready proto3 schemas for the **Google Home Foyer v1 API** (`google.internal.home.foyer.v1`, used by `home.google.com` and the Google Home Android app) alongside extended Nest Observe traits:
+
+- **`protobuf/pb/foyer/`** — Google Home Foyer v1 schemas (extracted from Google Home Android APK Protobuf-Lite descriptors and verified against live `googlehomefoyer-pa.clients6.google.com` responses):
+  - `common.proto` — `DeviceId`, `AgentDeviceId`, `LocalDeviceId`, `Temperature`, `Humidity`, `TemperatureRange`, `FanControlSettings`, `TraitParameter`, `TraitState`
+  - `energy.proto` — `EnergyService/GetThermostatStatus`, `ThermostatStatus`, `ThermostatStatusDisplay`, `ThermostatStatusBadge`, `GetWiringConfiguration`, `WiringTerminal`, and verified HVAC enums (`ThermostatMode`, `PreferredTemperatureUnit`, `HvacActor`, `ThermostatScheduleType`, `ThermostatAtomType`, `TemperatureTraitType`)
+  - `home_control.proto` — `HomeControlService/GetTraits`, `DeviceTraits`
+  - `home_occupancy.proto` — `HomeOccupancyService/GetStructureMode`, `FoyerStructureMode`
+  - `structures.proto` — `StructuresService/GetHomeGraph` (`Structure`, `Space`, `HomeGraphDevice`, `ExternalDeviceIds`)
+  - `users.proto` — `UsersService/GetNestAccountLinkState`, `ClientOliveTokenService/GetOliveToken`
+- **`protobuf/pb/nest/trait/`** — Additional Nest Observe trait definitions (`hvac_extra.proto`, `service_extra.proto`) compiled alongside the upstream Nest Observe specs.
+
+See **[mycon/nestgraph2](https://github.com/mycon/nestgraph2)** for a complete Python Foyer + Observe client, `protoc` compilation scripts, HAR cookie extraction/rotation tooling, and Grafana dashboards.
+
+---
+
+## Original `nest-observe` Documentation
 
 It provides a simple interface to create an event emitter which will stream updates whenever
 a device in your home changes.
