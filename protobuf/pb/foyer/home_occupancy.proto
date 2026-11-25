@@ -1,0 +1,28 @@
+// Google Home Foyer v1 HomeOccupancyService protobuf definitions.
+// Verified against Google Home APK v4.39.10.1 (Layvo;, Layvp;) and live
+// HomeOccupancyService/GetStructureMode responses.
+
+syntax = "proto3";
+
+package google.internal.home.foyer.v1;
+
+// Structure occupancy mode returned in GetStructureModeResponse.mode (field 3).
+// Live verified: 2 = STRUCTURE_MODE_HOME.
+enum FoyerStructureMode {
+  FOYER_STRUCTURE_MODE_UNSPECIFIED = 0;
+  FOYER_STRUCTURE_MODE_AWAY = 1;
+  FOYER_STRUCTURE_MODE_HOME = 2;
+  FOYER_STRUCTURE_MODE_VACATION = 3;
+}
+
+// Maps to Layvo;
+message GetStructureModeRequest {
+  string structure_id = 1;
+}
+
+// Maps to Layvp;
+message GetStructureModeResponse {
+  int32 presence_state = 1;
+  FoyerStructureMode mode = 3;
+  string error_message = 5;
+}

@@ -1,0 +1,42 @@
+// Google Home Foyer v1 UsersService & ClientOliveTokenService protobuf definitions.
+// Verified against Google Home APK v4.39.10.1 (Lazrk;, Lazrm;, Laytw;, Laytx;, Lazde;)
+// and live home.google.com responses.
+
+syntax = "proto3";
+
+package google.internal.home.foyer.v1;
+
+import "google/protobuf/duration.proto";
+
+// Maps to Lazrk;
+message GetNestAccountLinkStateRequest {}
+
+// Nest legacy user identifiers returned in GetNestAccountLinkStateResponse field 2.
+// Example: ["user.123456", "USER_0123456789ABCDEF"]
+message NestAccountLinkIds {
+  string legacy_user_key = 1;   // e.g. "user.123456"
+  string phoenix_user_id = 2;   // e.g. "USER_0123456789ABCDEF"
+}
+
+// Maps to Lazrm;
+message GetNestAccountLinkStateResponse {
+  int32 link_state = 1;
+  NestAccountLinkIds nest_ids = 2;
+}
+
+// Maps to Laytw;
+message GetOliveTokenRequest {}
+
+// Maps to Lazde; (field 1 of GetOliveTokenResponse).
+// Live observed: ["g.0.eyJ...", ["299", 976706000], null, "nest-phoenix-prod"]
+message OliveToken {
+  string token = 1;
+  google.protobuf.Duration ttl = 2;
+  int64 issue_timestamp = 3;
+  string realm = 4;
+}
+
+// Maps to Laytx;
+message GetOliveTokenResponse {
+  OliveToken olive_token = 1;
+}

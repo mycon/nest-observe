@@ -1,0 +1,74 @@
+// Shared Google Home Foyer v1 protobuf types.
+// Field numbers and wire types verified against Google Home APK
+// com.google.android.apps.chromecast.app v4.39.10.1 (base.apk RawMessageInfo)
+// and live googlehomefoyer-pa.clients6.google.com responses.
+
+syntax = "proto3";
+
+package google.internal.home.foyer.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+// Maps to Laycj; (agent_id + external device_id pair, e.g. "nest-home-assistant-prod", "DEVICE_...").
+message AgentDeviceId {
+  string agent_id = 1;
+  string device_id = 2;
+}
+
+// Maps to Layiw; (optional secondary identifier).
+message LocalDeviceId {
+  string id = 1;
+  string type = 2;
+}
+
+// Maps to Laymc; (canonical Foyer device identifier).
+message DeviceId {
+  string uuid = 1;
+  AgentDeviceId agent_info = 2;
+  LocalDeviceId local_info = 3;
+}
+
+// Maps to Lazuw; (Celsius temperature wrapper).
+message Temperature {
+  float value = 1;
+}
+
+// Maps to Lazuq; (relative humidity percentage wrapper, 0..100).
+message Humidity {
+  float value = 1;
+}
+
+// Maps to Lazuv; (low/high Celsius temperature pair, e.g. eco or safety range).
+message TemperatureRange {
+  Temperature low = 1;
+  Temperature high = 2;
+}
+
+// Maps to Lazve; (thermostat fan control settings).
+message FanControlSettings {
+  int32 mode = 1;
+  int32 hvac_override_speed = 2;
+  int32 current_speed = 3;
+  google.protobuf.Duration timer_duration = 4;
+  int32 schedule_speed = 5;
+  google.protobuf.Timestamp timer_end_time = 6;
+  int32 schedule_start_time = 7;
+  int32 schedule_end_time = 8;
+  google.protobuf.Duration schedule_duty_cycle = 9;
+  bool user_requested_fan_running = 10;
+}
+
+// Key/Value pair used in HomeControlService trait parameter lists.
+message TraitParameter {
+  string key = 1;
+  google.protobuf.Value value = 2;
+}
+
+// Maps to Lazlv; (single trait entry in GetTraitsResponse / Structure).
+message TraitState {
+  string name = 1;
+  repeated TraitParameter parameters = 2;
+  google.protobuf.Struct attributes = 3;
+}

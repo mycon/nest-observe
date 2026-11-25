@@ -1,0 +1,55 @@
+// Google Home Foyer v1 StructuresService protobuf definitions (HomeGraph subset).
+// Field numbers verified against Google Home APK v4.39.10.1
+// (Laytf;, Lazju;, Lazjf;, Laylv;, Lazdo;) and live StructuresService/GetHomeGraph responses.
+
+syntax = "proto3";
+
+package google.internal.home.foyer.v1;
+
+import "google/protobuf/struct.proto";
+import "foyer/common.proto";
+
+// Device reference inside a room/space (Laymm;).
+message SpaceDeviceRef {
+  DeviceId device_id = 1;
+}
+
+// Maps to Lazjf; (room / space within a structure).
+message Space {
+  string id = 1;
+  string name = 3;
+  repeated SpaceDeviceRef devices = 5;
+}
+
+// Maps to Lazdo; (field 39 of Device; carries PHX / DEVICE_... identifiers).
+message ExternalDeviceIds {
+  repeated AgentDeviceId ids = 1;
+}
+
+// Maps to Laylv; (device entry in Structure.devices).
+message HomeGraphDevice {
+  DeviceId id = 1;
+  string name = 4;
+  string device_type = 6;
+  repeated string traits = 7;
+  google.protobuf.Struct attributes = 20;
+  repeated TraitState trait_states = 30;
+  ExternalDeviceIds external_ids = 39;
+}
+
+// Maps to Lazju; (home / structure entry in GetHomeGraphResponse).
+message Structure {
+  string id = 1;
+  string name = 2;
+  repeated Space spaces = 6;
+  repeated HomeGraphDevice devices = 7;
+  repeated TraitState traits = 21;
+}
+
+// Maps to Laytf;
+message GetHomeGraphResponse {
+  string timestamp_ms = 1;
+  repeated Structure structures = 2;
+  repeated HomeGraphDevice unlinked_devices = 3;
+  string homegraph_id = 5;
+}

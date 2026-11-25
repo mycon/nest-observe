@@ -1,0 +1,213 @@
+// Google Home Foyer v1 EnergyService protobuf definitions.
+// Verified against Google Home APK v4.39.10.1 (Laywh;, Laywi;, Lazvj;, Lazuu;,
+// Layxj;, Layxk;, Lazvg;, Lazue;, Lazut;, Lazvi;, Lazvd;, Lazlj;) and live
+// EnergyService/GetThermostatStatus & GetWiringConfiguration responses.
+
+syntax = "proto3";
+
+package google.internal.home.foyer.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "foyer/common.proto";
+
+// Verified against Lazvg; in base.apk.
+enum ThermostatMode {
+  THERMOSTAT_MODE_UNSPECIFIED = 0;
+  THERMOSTAT_MODE_HEAT = 1;
+  THERMOSTAT_MODE_COOL = 2;
+  THERMOSTAT_MODE_RANGE = 3;
+  THERMOSTAT_MODE_OFF = 4;
+  THERMOSTAT_MODE_ECO = 5;
+  THERMOSTAT_MODE_ON = 6;
+  THERMOSTAT_MODE_SENSOR = 7;
+  THERMOSTAT_MODE_AUTO = 8;
+  THERMOSTAT_MODE_FAN_ONLY = 9;
+  THERMOSTAT_MODE_PURIFIER = 10;
+  THERMOSTAT_MODE_DRY = 11;
+}
+
+// Verified against Lazue; in base.apk.
+enum PreferredTemperatureUnit {
+  PREFERRED_TEMPERATURE_UNIT_UNSPECIFIED = 0;
+  PREFERRED_TEMPERATURE_UNIT_CELSIUS = 1;
+  PREFERRED_TEMPERATURE_UNIT_FAHRENHEIT = 2;
+}
+
+// Verified against Lazut; in base.apk.
+enum HvacActor {
+  HVAC_ACTOR_UNSPECIFIED = 0;
+  HVAC_ACTOR_NOBODY = 1;
+  HVAC_ACTOR_SCHEDULE_LEARNING = 2;
+  HVAC_ACTOR_LOCAL = 3;
+  HVAC_ACTOR_REMOTE = 4;
+  HVAC_ACTOR_WEB = 5;
+  HVAC_ACTOR_ANDROID = 6;
+  HVAC_ACTOR_IOS = 7;
+  HVAC_ACTOR_SEASONAL_SAVINGS = 8;
+  HVAC_ACTOR_RUSH_HOUR_REWARDS = 9;
+  HVAC_ACTOR_TIME_OF_USE = 10;
+  HVAC_ACTOR_DEMAND_CHARGE = 11;
+  HVAC_ACTOR_TOPAZ_CO = 12;
+  HVAC_ACTOR_TOPAZ_SMOKE = 13;
+  HVAC_ACTOR_QUICK_SCHEDULE = 14;
+  HVAC_ACTOR_AMBER_PROGRAMMER = 15;
+  HVAC_ACTOR_GOOGLE_ASSISTANT = 16;
+  HVAC_ACTOR_SMART_DEVICE_MANAGEMENT = 17;
+  HVAC_ACTOR_GOOGLE_ENERGY = 18;
+  HVAC_ACTOR_WORKS_WITH_NEST = 19;
+  HVAC_ACTOR_MATTER = 20;
+  HVAC_ACTOR_ENERGY_CAPTION = 21;
+  HVAC_ACTOR_GOOGLE_ASSISTANT_SCHEDULED_ROUTINE = 22;
+}
+
+// Verified against Lazvi; in base.apk.
+enum ThermostatScheduleType {
+  THERMOSTAT_SCHEDULE_TYPE_UNSPECIFIED = 0;
+  THERMOSTAT_SCHEDULE_TYPE_ATOM = 1;
+  THERMOSTAT_SCHEDULE_TYPE_SETPOINT_HEAT = 2;
+  THERMOSTAT_SCHEDULE_TYPE_SETPOINT_COOL = 3;
+  THERMOSTAT_SCHEDULE_TYPE_SETPOINT_RANGE = 4;
+  THERMOSTAT_SCHEDULE_TYPE_HOT_WATER = 5;
+}
+
+// Verified against Lazvd; in base.apk.
+enum ThermostatAtomType {
+  THERMOSTAT_ATOM_TYPE_UNSPECIFIED = 0;
+  THERMOSTAT_ATOM_TYPE_CUSTOM = 1;
+  THERMOSTAT_ATOM_TYPE_COMFORT = 2;
+  THERMOSTAT_ATOM_TYPE_ECO = 3;
+  THERMOSTAT_ATOM_TYPE_SLEEP = 4;
+}
+
+// Verified against Lazlj; in base.apk.
+enum TemperatureTraitType {
+  TEMPERATURE_TRAIT_UNSPECIFIED = 0;
+  TEMPERATURE_TRAIT_HEAT_PUMP_COMPRESSOR_THRESHOLD = 1;
+  TEMPERATURE_TRAIT_HEAT_PUMP_AUX_THRESHOLD = 2;
+  TEMPERATURE_TRAIT_DUAL_FUEL_BREAKPOINT = 3;
+  TEMPERATURE_TRAIT_SAFETY_HEAT = 4;
+  TEMPERATURE_TRAIT_SAFETY_COOL = 5;
+  TEMPERATURE_TRAIT_ECO_HEAT = 6;
+  TEMPERATURE_TRAIT_ECO_COOL = 7;
+  TEMPERATURE_TRAIT_ALERT_HEAT = 8;
+  TEMPERATURE_TRAIT_ALERT_COOL = 9;
+  HUMIDITY_TRAIT_ALERT_LOW = 10;
+  HUMIDITY_TRAIT_ALERT_HIGH = 11;
+  TEMPERATURE_TRAIT_SCHEDULE_HOLD_SETTINGS_HEAT = 12;
+  TEMPERATURE_TRAIT_SCHEDULE_HOLD_SETTINGS_COOL = 13;
+}
+
+// Maps to Laywh;
+message GetThermostatStatusRequest {
+  string device_id = 1;
+}
+
+// Maps to Lazlk;
+message ThermostatConnectivity {
+  int32 state = 1;
+  google.protobuf.Timestamp last_updated = 2;
+}
+
+// Active status badge in ThermostatStatusDisplay.badges (field 9 of Lazuu;).
+// Observed live: ["Heating", null, ["Heating to maintain 68°"], 1],
+//                ["Alt. Heat", null, ["Using alternate heating..."], 4]
+message ThermostatStatusBadge {
+  string title = 1;
+  string subtitle = 2;
+  repeated string descriptions = 3;
+  int32 badge_type = 4;
+}
+
+// Maps to Lazuu; (field 10 of ThermostatStatus).
+message ThermostatStatusDisplay {
+  string stage_label = 3;         // e.g. "Alt. heat stage 1", "Heat stage 2"
+  string secondary_label = 4;
+  string tertiary_label = 5;
+  string detail_label = 6;
+  int32 mode_icon = 7;            // ThermostatModeIcon enum
+  repeated ThermostatStatusBadge badges = 9;
+}
+
+// Remote sensor reference in ThermostatStatus.active_sensors (field 23).
+message ActiveSensorRef {
+  string sensor_id = 1;
+}
+
+// Known remote sensor summary in ThermostatStatus.known_sensors (field 24).
+message KnownSensorInfo {
+  string sensor_id = 1;
+  string temperature_insight = 2;
+  string label = 3;
+  int32 recency_status = 4;
+}
+
+// Maps to Lazuo; (field 35 of ThermostatStatus).
+message ThermostatActionLabel {
+  string text = 1;
+}
+
+// Maps to Lazvj; (field 7 of GetThermostatStatusResponse).
+// Live verified against Nest Observe stream:
+//   field 1 = current_temperature (active temperature reading, e.g. 19.69 C)
+//   field 2 = heating_target (heating setpoint, e.g. 19.983902 C = 68 F)
+//   field 3 = cooling_target (cooling setpoint in COOL/RANGE mode)
+//   field 25 = backplate_temperature (thermostat on-wall sensor, e.g. 20.24 C)
+message ThermostatStatus {
+  Temperature current_temperature = 1;
+  Temperature heating_target = 2;
+  Temperature cooling_target = 3;
+  ThermostatMode mode = 4;
+  repeated ThermostatMode available_modes = 5;
+  bool eco_available = 6;
+  bool fan_available = 7;
+  PreferredTemperatureUnit preferred_temperature_unit = 8;
+  int32 thermostat_status_code = 9;
+  ThermostatStatusDisplay status_display = 10;
+  Humidity current_humidity = 11;
+  string device_id = 12;
+  TemperatureRange eco_temperature_range = 15;
+  FanControlSettings fan_control_settings = 16;
+  bool has_heat = 17;
+  bool has_cool = 18;
+  bool supports_sensor_selection = 19;
+  TemperatureRange safety_temperature_range = 21;
+  repeated ActiveSensorRef active_sensors = 23;
+  repeated KnownSensorInfo known_sensors = 24;
+  Temperature backplate_temperature = 25;
+  google.protobuf.Duration max_fan_duration = 28;
+  bool supports_fan = 29;
+  Temperature min_setpoint = 30;
+  Temperature max_setpoint = 31;
+  ThermostatScheduleType schedule_type = 33;
+  bool is_online = 34;
+  ThermostatActionLabel action_label = 35;
+}
+
+// Maps to Laywi;
+message GetThermostatStatusResponse {
+  ThermostatConnectivity connectivity = 2;
+  FanControlSettings fan_settings = 4;
+  bool has_schedule = 5;
+  bool has_energy_history = 6;
+  ThermostatStatus thermostat_status = 7;
+}
+
+// Maps to Layxj;
+message GetWiringConfigurationRequest {
+  string device_id = 1;
+}
+
+// Maps to Lazvl; (live observed: ["W", "heat", 1, 1], ["Y", "cool", 1, 2], ["G", "fan", 1, 6])
+message WiringTerminal {
+  string label = 1;
+  string function_name = 2;
+  bool connected = 3;
+  int32 terminal_type = 4;
+  int32 wire_function = 5;
+}
+
+// Maps to Layxk;
+message GetWiringConfigurationResponse {
+  repeated WiringTerminal terminals = 1;
+}

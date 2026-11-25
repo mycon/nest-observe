@@ -1,0 +1,26 @@
+// Google Home Foyer v1 HomeControlService protobuf definitions.
+// Verified against Google Home APK v4.39.10.1 (Laywm;, Laywn;, Laymn;, Lazlv;)
+// and live HomeControlService/GetTraits responses.
+
+syntax = "proto3";
+
+package google.internal.home.foyer.v1;
+
+import "foyer/common.proto";
+
+// Maps to Laywm;
+message GetTraitsRequest {
+  repeated DeviceId device_ids = 1;
+  int32 reason = 3;
+}
+
+// Maps to Laymn;
+message DeviceTraits {
+  DeviceId device_id = 1;
+  repeated TraitState traits = 2;
+}
+
+// Maps to Laywn;
+message GetTraitsResponse {
+  repeated DeviceTraits device_traits = 1;
+}
